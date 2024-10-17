@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { ISelectAnswersQuestion } from "@/interfaces/quiz";
+import SubmitButton from "./SubmitButton";
 
 interface SelectAnswersQuestionProps {
   question: ISelectAnswersQuestion;
@@ -39,16 +40,11 @@ const SelectAnswersQuestion: React.FC<SelectAnswersQuestionProps> = ({
           <Text style={styles.optionText}>{option}</Text>
         </TouchableOpacity>
       ))}
-      <TouchableOpacity
-        style={[
-          styles.submitButton,
-          selectedOptions.length === 0 && styles.disabledButton,
-        ]}
+      <SubmitButton
         onPress={handleSubmit}
         disabled={selectedOptions.length === 0}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+        text={"Submit"}
+      />
     </View>
   );
 };
@@ -70,20 +66,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     textAlign: "center",
-  },
-  submitButton: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  disabledButton: {
-    backgroundColor: "#888",
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
   },
 });
 

@@ -8,6 +8,7 @@ import {
   Text,
 } from "react-native";
 import { IEssayQuestion } from "@/interfaces/quiz";
+import SubmitButton from "./SubmitButton";
 
 interface EssayQuestionProps {
   question: IEssayQuestion;
@@ -35,13 +36,11 @@ const EssayQuestion: React.FC<EssayQuestionProps> = ({
         onChangeText={setText}
       />
 
-      <Pressable
+      <SubmitButton
         onPress={handleSubmit}
         disabled={text.trim() === ""}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </Pressable>
+        text={"Submit"}
+      />
     </View>
   );
 };
@@ -58,17 +57,6 @@ const styles = StyleSheet.create({
     color: "#000",
     height: 100,
     textAlignVertical: "top",
-  },
-  submitButton: {
-    backgroundColor: "#333",
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    textAlign: "center",
   },
 });
 

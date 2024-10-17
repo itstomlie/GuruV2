@@ -81,7 +81,7 @@ const quizzes: IQuiz[] = [
           "They melted",
           "They changed color",
         ],
-        correctOption: "They popped quietly",
+        correctOption: "They exploded loudly",
       },
       {
         id: "q3",
@@ -108,7 +108,7 @@ const quizzes: IQuiz[] = [
           "With his bare hand",
           "Using tweezers",
         ],
-        correctOption: "With his hand",
+        correctOption: "With his bare hand",
       },
       {
         id: "q6",

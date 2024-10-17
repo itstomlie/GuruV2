@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { IMatchPairsQuestion } from "@/interfaces/quiz";
+import SubmitButton from "./SubmitButton";
 
 interface MatchPairsQuestionProps {
   question: IMatchPairsQuestion;
@@ -36,9 +37,11 @@ const MatchPairsQuestion: React.FC<MatchPairsQuestionProps> = ({
           </TouchableOpacity>
         </View>
       ))}
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+      <SubmitButton
+        onPress={handleSubmit}
+        disabled={Object.values(matches).some((v) => v === "")}
+        text={"Submit"}
+      />
     </View>
   );
 };
@@ -66,17 +69,6 @@ const styles = StyleSheet.create({
   rightText: {
     color: "white",
     textAlign: "center",
-  },
-  submitButton: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
   },
 });
 

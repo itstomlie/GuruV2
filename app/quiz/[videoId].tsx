@@ -20,7 +20,6 @@ import SelectAnswersQuestion from "@/components/questions/SelectAnswersQuestion"
 const QuizScreen = () => {
   const router = useRouter();
   const { videoId } = useLocalSearchParams();
-  console.log("🚀 ~ QuizScreen ~ videoId:", videoId);
   const handleClose = () => {
     router.back();
   };
@@ -48,16 +47,47 @@ const QuizScreen = () => {
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Quiz completed, handle submission
-      // For example, navigate to a results screen
       router.push("/quiz/results");
     }
   };
 
+  const checkIfAnswerIsCorrect = (answer: any) => {
+    console.log("🚀 ~ checkIfAnswerIsCorrect ~ answer:", answer);
+
+    if (currentQuestion.type === "multiple-choice") {
+      return currentQuestion.correctOption === answer;
+    } else if (currentQuestion.type === "fill-in-the-blank") {
+      return (
+        answer
+          .map((a: string | number) =>
+            typeof a === "string" ? a.toLowerCase() : a
+          )
+          .sort()
+          .toString() ===
+        currentQuestion.correctAnswers
+          .map((a: string | number) =>
+            typeof a === "string" ? a.toLowerCase() : a
+          )
+          .sort()
+          .toString()
+      );
+    } else if (currentQuestion.type === "match-pairs") {
+      return answer.toLowerCase().trim() === currentQuestion.pairs;
+    } else if (currentQuestion.type === "type-in-answer") {
+      return (
+        answer.toLowerCase().trim() ===
+        currentQuestion.correctAnswer.toLowerCase().trim()
+      );
+    }
+  };
+
   const handleAnswer = (questionId: string, answer: any) => {
+    console.log(checkIfAnswerIsCorrect(answer));
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     handleNext();
   };
+
+  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
   return (
     <View style={styles.container}>
@@ -66,25 +96,14 @@ const QuizScreen = () => {
         <TouchableOpacity onPress={handleClose}>
           <Ionicons name="close" size={30} color="black" />
         </TouchableOpacity>
-        <View style={styles.healthContainer}>
-          <View style={styles.healthBar} />
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBar, { width: `${progress}%` }]} />
         </View>
         <View style={styles.healthLabelContainer}>
           <Ionicons name="heart" size={14} color="#ff6b6b" />
           <Text style={styles.healthLabel}>5</Text>
         </View>
       </View>
-      {/* 
-      <View style={styles.progressBarContainer}>
-        <Progress
-          value={((currentQuestionIndex + 1) / quiz.questions.length) * 100}
-          size="md"
-        >
-          <ProgressFilledTrack className="bg-blue-400" />
-        </Progress>
-      </View> */}
-
-      {/* Quiz Question */}
       <ScrollView contentContainerStyle={styles.quizContentContainer}>
         <View style={styles.quizHeaderText}>
           <Text style={styles.title}>{quiz.title}</Text>
@@ -152,27 +171,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  progressBarContainer: {
-    width: "100%",
-    height: 10,
-  },
-  progressBarBackground: {
-    width: "100%",
-    height: 10,
-    backgroundColor: "#555",
-    borderRadius: 5,
-    overflow: "hidden",
-  },
-  progressBarFill: {
-    width: "20%", // 1 out of 5
-    height: "100%",
-    backgroundColor: "#fff",
-  },
-  progressText: {
-    color: "white",
-    marginTop: 5,
-    textAlign: "center",
-  },
   quizContentContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -209,16 +207,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
   },
-  healthContainer: {
+  progressBarContainer: {
     flexDirection: "row",
     backgroundColor: "gray",
     height: 10,
     borderRadius: 10,
     overflow: "hidden",
-  },
-  healthBar: {
     width: "80%",
-    backgroundColor: "#ff6b6b",
+  },
+  progressBar: {
+    backgroundColor: "#72BF78",
     height: "100%",
   },
   healthLabel: {

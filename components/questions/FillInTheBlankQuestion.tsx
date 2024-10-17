@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { IFillInTheBlankQuestion } from "@/interfaces/quiz";
+import SubmitButton from "./SubmitButton";
 
 interface FillInTheBlankQuestionProps {
   question: IFillInTheBlankQuestion;
@@ -43,13 +44,11 @@ const FillInTheBlankQuestion: React.FC<FillInTheBlankQuestionProps> = ({
           onChangeText={(text) => handleChange(text, index)}
         />
       ))}
-      <Pressable
+      <SubmitButton
         onPress={handleSubmit}
         disabled={answers.some((a) => a.trim() === "")}
-        style={styles.submitButton}
-      >
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </Pressable>
+        text={"Submit"}
+      />
     </View>
   );
 };
@@ -64,18 +63,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 5,
     color: "#000",
-  },
-  submitButton: {
-    backgroundColor: "#333",
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 5,
-    elevation: 3,
-  },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    textAlign: "center",
   },
 });
 

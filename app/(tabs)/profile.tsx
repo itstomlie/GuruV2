@@ -1,4 +1,6 @@
 import CharacterCanvas from "@/components/character/character-canvas";
+import { useAppSelector } from "@/hooks/reduxHooks";
+import { selectHp } from "@/store/character/hpSlice";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import React from "react";
 
@@ -12,6 +14,10 @@ import {
 } from "react-native";
 
 export default function Profile() {
+  const currentHp = useAppSelector(selectHp).currentHp;
+  const maxHp = useAppSelector(selectHp).maxHp;
+  const healthPercentage = (currentHp / maxHp) * 100;
+
   return (
     <>
       <CharacterCanvas />
@@ -79,8 +85,17 @@ export default function Profile() {
               style={styles.healthIcon}
             />
             <View style={styles.healthContainer}>
-              <View style={styles.healthBar} />
-              <Text style={styles.progressLabel}>5 / 5 Health</Text>
+              <View
+                style={[
+                  styles.healthBar,
+                  {
+                    width: `${healthPercentage}%`,
+                  },
+                ]}
+              />
+              <Text style={styles.progressLabel}>
+                {currentHp} / {maxHp} Health
+              </Text>
             </View>
           </View>
           <View style={styles.experienceOuterContainer}>
@@ -279,7 +294,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   healthBar: {
-    width: "80%",
     backgroundColor: "#ff6b6b",
     height: "100%",
   },

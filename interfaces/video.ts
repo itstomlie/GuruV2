@@ -3,6 +3,7 @@ export interface IVideo {
   title?: string;
   uri: any;
   author: string;
+  avatar?: string;
   description: string;
   hashtags: string;
   datePosted: string;

@@ -3,7 +3,10 @@ export const videos = [
     id: "1",
     uri: require("@/assets/videos/video1.mp4"),
     author: "Nile Red",
-    description: "Making hydrogen and oxygen bubbles",
+    title: "Making hydrogen and oxygen bubbles",
+    avatar:
+      "https://yt3.ggpht.com/sJjv-k8rR1lggpulNcj5jLN7Cgf7_6Hzjkp0_93cy2xvEAjgcE8hXJUxx0vaKrVXYthJMKsg=s176-c-k-c0x00ffffff-no-rj-mo",
+    description: "Making hydrogen and oxygen bubble",
     hashtags: "#Hydrogen #Oxygen",
     datePosted: "12 hours ago",
     likes: 2600000,

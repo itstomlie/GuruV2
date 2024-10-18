@@ -6,12 +6,14 @@ import {
   Dimensions,
   StyleSheet,
   Animated,
+  Image,
 } from "react-native";
 import { Video, ResizeMode, AVPlaybackStatus } from "expo-av";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { IVideo } from "@/interfaces/video";
 import { Link, useNavigation } from "expo-router";
 import { formatNumber } from "@/utils/numberFormatter";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -24,6 +26,7 @@ const VideoItemComponent = ({
   index: number;
   currentIndex: number;
 }) => {
+  const insets = useSafeAreaInsets();
   const videoRef = useRef<Video>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [status, setStatus] = useState<AVPlaybackStatus | null>(null);
@@ -98,24 +101,33 @@ const VideoItemComponent = ({
         </Animated.View>
       )}
       {/* Overlay Bottom - Information */}
-      <View style={styles.bottomOverlay}>
-        <Text style={styles.author}>{item.author}</Text>
+      <View
+        style={[
+          styles.bottomOverlay,
+          { paddingBottom: insets.top + 10 }, // Adjust padding based on safe area
+        ]}
+      >
+        <View style={styles.authorNameContainer}>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              source={{
+                uri:
+                  (item.avatar as string) ||
+                  "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+              }}
+            />
+          </View>
+          <Text style={styles.author}>{item.author}</Text>
+        </View>
         <Text style={styles.description}>{item.description}</Text>
         <Text style={styles.hashtags}>{item.hashtags}</Text>
         <Text style={styles.date}>{item.datePosted}</Text>
       </View>
       {/* Right Side Icons */}
-      <View style={styles.rightIcons}>
+      <View style={[styles.rightIcons, { paddingBottom: insets.top + 30 }]}>
         <TouchableOpacity style={styles.iconButton}>
-          {/* <Avatar size="md">
-            <AvatarFallbackText>Jane Doe</AvatarFallbackText>
-            <AvatarImage
-              source={{
-                uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-              }}
-            />
-            <AvatarBadge />
-          </Avatar> */}
+          {/* Placeholder for Avatar or other icons */}
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons name="heart" size={30} color="white" />
@@ -136,7 +148,13 @@ const VideoItemComponent = ({
         <Link
           href={{
             pathname: "/quiz/[videoId]",
-            params: { videoId: item.id },
+            params: {
+              videoId: item.id,
+              author: item.author,
+              title: item.title,
+              description: item.description,
+              avatar: item.avatar,
+            },
           }}
           asChild
         >
@@ -199,38 +217,52 @@ const styles = StyleSheet.create({
   },
   bottomOverlay: {
     position: "absolute",
-    bottom: 60,
+    bottom: 25,
     left: 10,
     right: 80, // To make space for right icons
+    gap: 5,
+  },
+  authorNameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  avatarContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    overflow: "hidden",
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 15,
   },
   author: {
     color: "white",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   description: {
     color: "white",
     fontSize: 14,
-    marginTop: 5,
   },
   hashtags: {
     color: "white",
     fontSize: 14,
-    marginTop: 5,
   },
   date: {
     color: "gray",
     fontSize: 12,
-    marginTop: 5,
   },
   rightIcons: {
     position: "absolute",
     right: 10,
-    bottom: 100,
+    bottom: 15,
     alignItems: "center",
+    gap: 20,
   },
   iconButton: {
-    marginBottom: 25,
     alignItems: "center",
   },
   iconText: {
@@ -239,7 +271,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   brightBulb: {
-    marginBottom: 25,
     width: 40,
     height: 40,
     borderRadius: 20,

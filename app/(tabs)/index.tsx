@@ -6,7 +6,6 @@ import { generateData } from "@/utils/generateData";
 import { videos } from "@/constants/videos";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-
 const HomeScreen = () => {
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);

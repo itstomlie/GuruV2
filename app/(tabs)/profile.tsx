@@ -22,7 +22,6 @@ export default function Profile() {
     <>
       <CharacterCanvas />
       <ScrollView style={styles.container}>
-        {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.userInfo}>
             <View>
@@ -60,7 +59,6 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* Tab Bar */}
         <View style={styles.tabContainer}>
           <View style={[styles.tabItemContainer, styles.activeTab]}>
             <Image
@@ -75,7 +73,6 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* Character Status */}
         <View style={styles.characterStatusContainer}>
           <View style={styles.healthOuterContainer}>
             <Ionicons
@@ -123,7 +120,6 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* Starting Objectives */}
         <View style={styles.objectiveCard}>
           <Text style={styles.objectiveTitle}>Starting Objectives</Text>
           <View style={styles.objectivePoints}>

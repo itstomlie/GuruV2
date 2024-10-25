@@ -11,7 +11,7 @@ export const generateData = (count: number): IVideo[] => {
     const baseVideo = videos[i % videos.length];
     generatedData.push({
       ...baseVideo,
-      id: `${idCounter++}`, // Ensure unique ID
+      id: `${idCounter++}`,
     });
   }
 

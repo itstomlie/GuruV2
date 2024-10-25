@@ -14,6 +14,10 @@ import { IVideo } from "@/interfaces/video";
 import { Link, useNavigation } from "expo-router";
 import { formatNumber } from "@/utils/numberFormatter";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -71,7 +75,6 @@ const VideoItemComponent = ({
     }
   }, [currentIndex, index]);
 
-  // Determine the correct source format
   const videoSource =
     typeof item.uri === "string" ? { uri: item.uri } : item.uri;
 
@@ -88,7 +91,6 @@ const VideoItemComponent = ({
         onPlaybackStatusUpdate={(status) => setStatus(status)}
         onTouchEnd={togglePlayback}
       />
-      {/* Animated Play/Pause Button */}
       {index === currentIndex && (
         <Animated.View style={[styles.playButton, { opacity: fadeAnim }]}>
           <TouchableOpacity onPress={togglePlayback}>
@@ -100,13 +102,7 @@ const VideoItemComponent = ({
           </TouchableOpacity>
         </Animated.View>
       )}
-      {/* Overlay Bottom - Information */}
-      <View
-        style={[
-          styles.bottomOverlay,
-          { paddingBottom: insets.top + 10 }, // Adjust padding based on safe area
-        ]}
-      >
+      <View style={[styles.bottomOverlay, { paddingBottom: insets.top + 10 }]}>
         <View style={styles.authorNameContainer}>
           <View style={styles.avatarContainer}>
             <Image
@@ -124,11 +120,8 @@ const VideoItemComponent = ({
         <Text style={styles.hashtags}>{item.hashtags}</Text>
         <Text style={styles.date}>{item.datePosted}</Text>
       </View>
-      {/* Right Side Icons */}
       <View style={[styles.rightIcons, { paddingBottom: insets.top + 30 }]}>
-        <TouchableOpacity style={styles.iconButton}>
-          {/* Placeholder for Avatar or other icons */}
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton}></TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons name="heart" size={30} color="white" />
           <Text style={styles.iconText}>{formatNumber(item.likes)}</Text>
@@ -174,7 +167,6 @@ const VideoItemComponent = ({
   );
 };
 
-// Custom comparison to prevent unnecessary re-renders
 const areEqual = (
   prevProps: Readonly<{
     item: IVideo;
@@ -199,7 +191,7 @@ export const VideoItem = React.memo(VideoItemComponent, areEqual);
 const styles = StyleSheet.create({
   videoContainer: {
     width: "100%",
-    height: SCREEN_HEIGHT, // Ensure exact screen height
+    height: hp("100%"),
     position: "relative",
     backgroundColor: "black",
   },
@@ -211,7 +203,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    top: SCREEN_HEIGHT / 2 - 40, // Center vertically
+    top: SCREEN_HEIGHT / 2 - 40,
     left: 0,
     right: 0,
   },
@@ -219,7 +211,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 25,
     left: 10,
-    right: 80, // To make space for right icons
+    right: 80,
     gap: 5,
   },
   authorNameContainer: {

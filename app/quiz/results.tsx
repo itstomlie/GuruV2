@@ -7,8 +7,8 @@ import { IQuiz } from "@/interfaces/quiz";
 
 const ResultsScreen = () => {
   const router = useRouter();
-  const { answers, quizId } = useLocalSearchParams();
-  const [score, setScore] = useState<number>(0);
+  const { answers, quizId, correctAnswersNum } = useLocalSearchParams();
+  const [score, setScore] = useState<number>(Number(correctAnswersNum));
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const ResultsScreen = () => {
             }
             break;
           case "fill-in-the-blank":
-            // Simple check: all answers must match
             if (
               Array.isArray(userAnswer) &&
               userAnswer.every((ans) =>
@@ -54,7 +53,6 @@ const ResultsScreen = () => {
               calculatedScore += 1;
             }
             break;
-          // Add checks for other question types as needed
           default:
             break;
         }
@@ -65,7 +63,7 @@ const ResultsScreen = () => {
   }, []);
 
   const handleClose = () => {
-    router.push("/"); // Navigate to home or another appropriate screen
+    router.push("/");
   };
 
   return (

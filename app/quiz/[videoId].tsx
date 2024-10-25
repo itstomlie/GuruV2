@@ -25,16 +25,7 @@ const QuizScreen: React.FC = () => {
     router.back();
   };
 
-  const currentHp = useAppSelector(selectHp).currentHp;
-  const dispatch = useAppDispatch();
-
-  // Find the quiz with the matching videoId
   const quiz: IQuiz | undefined = quizzes.find((q) => q.videoId === videoId);
-
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<{ [key: string]: any }>({});
-  const [showHalfwayScreen, setShowHalfwayScreen] = useState(false);
-
   if (!quiz) {
     return (
       <View style={styles.container}>
@@ -46,9 +37,17 @@ const QuizScreen: React.FC = () => {
     );
   }
 
-  const halfwayIndex = Math.floor(quiz.questions.length / 2);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showHalfwayScreen, setShowHalfwayScreen] = useState(false);
+  const [correctAnswersNum, setCorrectAnswersNum] = useState(0);
+  const [answers, setAnswers] = useState<{ [key: string]: any }>({});
+
+  const currentHp = useAppSelector(selectHp).currentHp;
+  const dispatch = useAppDispatch();
+  const quizLength = quiz.questions.length;
+  const halfwayIndex = Math.floor(quizLength / 2);
   const currentQuestion: IQuestion = quiz.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
+  const progress = ((currentQuestionIndex + 1) / quizLength) * 100;
 
   useEffect(() => {
     if (currentQuestionIndex === halfwayIndex) {
@@ -62,10 +61,10 @@ const QuizScreen: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < quiz.questions.length - 1) {
+    if (currentQuestionIndex < quizLength - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
-      router.push("/quiz/results");
+      router.push({ pathname: "/quiz/results", params: { correctAnswersNum } });
     }
   };
 
@@ -102,6 +101,10 @@ const QuizScreen: React.FC = () => {
   const handleAnswer = (questionId: string, answer: any) => {
     if (!checkIfAnswerIsCorrect(answer)) {
       dispatch(decrementHp());
+    } else {
+      setCorrectAnswersNum(
+        (prevCorrectAnswersNum) => prevCorrectAnswersNum + 1
+      );
     }
     setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     handleNext();

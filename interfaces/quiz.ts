@@ -28,12 +28,11 @@ export interface IMultipleChoiceQuestion extends IQuestionBase {
 
 export interface IEssayQuestion extends IQuestionBase {
   type: "essay";
-  // You can add additional fields if needed
 }
 
 export interface IFillInTheBlankQuestion extends IQuestionBase {
   type: "fill-in-the-blank";
-  blanks: number; // Number of blanks in the question
+  blanks: number;
   correctAnswers: string[];
 }
 

@@ -1,8 +1,11 @@
+import Auth from "@/components/auth/Auth";
 import CharacterCanvas from "@/components/character/character-canvas";
 import { useAppSelector } from "@/hooks/reduxHooks";
+import { supabase } from "@/lib/supabase";
 import { selectHp } from "@/store/character/hpSlice";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { Session } from "@supabase/supabase-js";
+import React, { useEffect, useState } from "react";
 
 import {
   ScrollView,
@@ -18,145 +21,169 @@ export default function Profile() {
   const maxHp = useAppSelector(selectHp).maxHp;
   const healthPercentage = (currentHp / maxHp) * 100;
 
+  const [session, setSession] = useState<Session | null>(null);
+  console.log("🚀 ~ Profile ~ session:", session);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
   return (
     <>
-      <CharacterCanvas />
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <View>
-              <View style={styles.userLevel}>
-                <Text style={styles.username}>@itsTomLie</Text>
-                <Text style={styles.level}>Lvl.1</Text>
+      {session && session.user ? (
+        <>
+          <CharacterCanvas />
+          <View style={styles.logOutContainer}>
+            <TouchableOpacity onPress={() => supabase.auth.signOut()}>
+              <Ionicons name="log-out" size={30} color="white" />
+            </TouchableOpacity>
+          </View>
+          <ScrollView style={styles.container}>
+            <View style={styles.header}>
+              <View style={styles.userInfo}>
+                <View>
+                  <View style={styles.userLevel}>
+                    <Text style={styles.username}>@itsTomLie</Text>
+                    <Text style={styles.level}>Lvl.1</Text>
+                  </View>
+                  <Text style={styles.fullName}>Tommy Tommy</Text>
+                  <Text style={styles.joinDate}>Joined Nov 2024</Text>
+                </View>
               </View>
-              <Text style={styles.fullName}>Tommy Tommy</Text>
-              <Text style={styles.joinDate}>Joined Nov 2024</Text>
+              <View style={styles.cta}>
+                <TouchableOpacity style={styles.addFriendButton}>
+                  <Ionicons name="person-add" size={20} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.addFriendButton}>
+                  <Ionicons name="share-social" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.cta}>
-            <TouchableOpacity style={styles.addFriendButton}>
-              <Ionicons name="person-add" size={20} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.addFriendButton}>
-              <Ionicons name="share-social" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.socialStats}>
-          <View style={styles.stat}>
-            <Text style={styles.statNumber}>823</Text>
-            <Text style={styles.statLabel}>Following</Text>
-          </View>
-          <Text style={styles.statSeparator}>|</Text>
-          <View style={styles.stat}>
-            <Text style={styles.statNumber}>5738</Text>
-            <Text style={styles.statLabel}>Followers</Text>
-          </View>
-          <Text style={styles.statSeparator}>|</Text>
-          <View style={styles.stat}>
-            <Text style={styles.statNumber}>203k</Text>
-            <Text style={styles.statLabel}>Likes</Text>
-          </View>
-        </View>
+            <View style={styles.socialStats}>
+              <View style={styles.stat}>
+                <Text style={styles.statNumber}>823</Text>
+                <Text style={styles.statLabel}>Following</Text>
+              </View>
+              <Text style={styles.statSeparator}>|</Text>
+              <View style={styles.stat}>
+                <Text style={styles.statNumber}>5738</Text>
+                <Text style={styles.statLabel}>Followers</Text>
+              </View>
+              <Text style={styles.statSeparator}>|</Text>
+              <View style={styles.stat}>
+                <Text style={styles.statNumber}>203k</Text>
+                <Text style={styles.statLabel}>Likes</Text>
+              </View>
+            </View>
 
-        <View style={styles.tabContainer}>
-          <View style={[styles.tabItemContainer, styles.activeTab]}>
-            <Image
-              source={require("@/assets/icons/dojo.png")}
-              style={styles.tabIcon}
-            />
-            <Text style={styles.tabItem}>Dojo</Text>
-          </View>
-          <View style={[styles.tabItemContainer]}>
-            <Ionicons name="grid-outline" size={20} />
-            <Text style={styles.tabItem}>Posts</Text>
-          </View>
-        </View>
+            <View style={styles.tabContainer}>
+              <View style={[styles.tabItemContainer, styles.activeTab]}>
+                <Image
+                  source={require("@/assets/icons/dojo.png")}
+                  style={styles.tabIcon}
+                />
+                <Text style={styles.tabItem}>Dojo</Text>
+              </View>
+              <View style={[styles.tabItemContainer]}>
+                <Ionicons name="grid-outline" size={20} />
+                <Text style={styles.tabItem}>Posts</Text>
+              </View>
+            </View>
 
-        <View style={styles.characterStatusContainer}>
-          <View style={styles.healthOuterContainer}>
-            <Ionicons
-              name="heart"
-              size={20}
-              color="#ff6b6b"
-              style={styles.healthIcon}
-            />
-            <View style={styles.healthContainer}>
-              <View
-                style={[
-                  styles.healthBar,
-                  {
-                    width: `${healthPercentage}%`,
-                  },
-                ]}
-              />
-              <Text style={styles.progressLabel}>
-                {currentHp} / {maxHp} Health
-              </Text>
-            </View>
-          </View>
-          <View style={styles.experienceOuterContainer}>
-            <Ionicons
-              name="star"
-              size={20}
-              color="#ffd700"
-              style={styles.experienceIcon}
-            />
-            <View style={styles.experienceContainer}>
-              <View style={styles.experienceBar} />
-              <Text style={styles.progressLabel}>0 / 25 Experience</Text>
-            </View>
-          </View>
+            <View style={styles.characterStatusContainer}>
+              <View style={styles.healthOuterContainer}>
+                <Ionicons
+                  name="heart"
+                  size={20}
+                  color="#ff6b6b"
+                  style={styles.healthIcon}
+                />
+                <View style={styles.healthContainer}>
+                  <View
+                    style={[
+                      styles.healthBar,
+                      {
+                        width: `${healthPercentage}%`,
+                      },
+                    ]}
+                  />
+                  <Text style={styles.progressLabel}>
+                    {currentHp} / {maxHp} Health
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.experienceOuterContainer}>
+                <Ionicons
+                  name="star"
+                  size={20}
+                  color="#ffd700"
+                  style={styles.experienceIcon}
+                />
+                <View style={styles.experienceContainer}>
+                  <View style={styles.experienceBar} />
+                  <Text style={styles.progressLabel}>0 / 25 Experience</Text>
+                </View>
+              </View>
 
-          <View style={styles.currencyContainer}>
-            <View style={styles.coinsContainer}>
-              <FontAwesome6 name="bitcoin" size={20} color="#ffd700" />
-              <Text>10,000</Text>
+              <View style={styles.currencyContainer}>
+                <View style={styles.coinsContainer}>
+                  <FontAwesome6 name="bitcoin" size={20} color="#ffd700" />
+                  <Text>10,000</Text>
+                </View>
+                <View style={styles.gemContainer}>
+                  <FontAwesome6 name="gem" size={20} color="#5bcdfe" />
+                  <Text>500</Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.gemContainer}>
-              <FontAwesome6 name="gem" size={20} color="#5bcdfe" />
-              <Text>500</Text>
-            </View>
-          </View>
-        </View>
 
-        <View style={styles.objectiveCard}>
-          <Text style={styles.objectiveTitle}>Starting Objectives</Text>
-          <View style={styles.objectivePoints}>
-            <Text style={styles.coins}>100</Text>
-            <Text style={styles.tasksCompleted}>0 / 5</Text>
-          </View>
-        </View>
-
-        {/* Streak Section */}
-        <View style={styles.streakContainer}>
-          <Text style={styles.streakText}>You’re on 21 days streak!</Text>
-        </View>
-
-        {/* Challenges */}
-        <View style={styles.challengesContainer}>
-          <View style={styles.challengeHeader}>
-            <Text style={styles.challengeTitle}>Challenges</Text>
-            <TouchableOpacity>
-              <Text style={styles.viewAll}>View All</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.challengeCard}>
-            <Text style={styles.challengeName}>Finish 3 Quizzes</Text>
-            <View style={styles.objectivePoints}>
-              <Text style={styles.coins}>150</Text>
-              <Text style={styles.tasksCompleted}>0 / 3</Text>
+            <View style={styles.objectiveCard}>
+              <Text style={styles.objectiveTitle}>Starting Objectives</Text>
+              <View style={styles.objectivePoints}>
+                <Text style={styles.coins}>100</Text>
+                <Text style={styles.tasksCompleted}>0 / 5</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.challengeCard}>
-            <Text style={styles.challengeName}>Battle 2 friends</Text>
-            <View style={styles.objectivePoints}>
-              <Text style={styles.coins}>200</Text>
-              <Text style={styles.tasksCompleted}>0 / 2</Text>
+
+            {/* Streak Section */}
+            <View style={styles.streakContainer}>
+              <Text style={styles.streakText}>You’re on 21 days streak!</Text>
             </View>
-          </View>
-        </View>
-      </ScrollView>
+
+            {/* Challenges */}
+            <View style={styles.challengesContainer}>
+              <View style={styles.challengeHeader}>
+                <Text style={styles.challengeTitle}>Challenges</Text>
+                <TouchableOpacity>
+                  <Text style={styles.viewAll}>View All</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.challengeCard}>
+                <Text style={styles.challengeName}>Finish 3 Quizzes</Text>
+                <View style={styles.objectivePoints}>
+                  <Text style={styles.coins}>150</Text>
+                  <Text style={styles.tasksCompleted}>0 / 3</Text>
+                </View>
+              </View>
+              <View style={styles.challengeCard}>
+                <Text style={styles.challengeName}>Battle 2 friends</Text>
+                <View style={styles.objectivePoints}>
+                  <Text style={styles.coins}>200</Text>
+                  <Text style={styles.tasksCompleted}>0 / 2</Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </>
+      ) : (
+        <Auth />
+      )}
     </>
   );
 }
@@ -166,6 +193,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f2f2f2",
     paddingHorizontal: 16,
+  },
+  logOutContainer: {
+    position: "absolute",
+    padding: 16,
+    top: 0,
+    right: 0,
   },
   header: {
     flexDirection: "row",

@@ -12,14 +12,11 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Auth from "@/components/Auth";
-import { Text } from "react-native";
 
 export { ErrorBoundary } from "expo-router";
 
 import "react-native-url-polyfill/auto";
-import { supabase } from "@/lib/supabase";
-import { Session } from "@supabase/supabase-js";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const unstable_settings = {
@@ -56,18 +53,6 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -75,13 +60,10 @@ function RootLayoutNav() {
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
-            <Auth />
-            {session && session.user && (
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-            )}
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
           </ThemeProvider>
         </SafeAreaProvider>
       </Provider>

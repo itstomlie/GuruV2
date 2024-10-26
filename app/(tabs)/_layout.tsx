@@ -1,11 +1,13 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Octicons from "@expo/vector-icons/Octicons";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "#F5F5F5",
         tabBarStyle: {
           backgroundColor: "black",
@@ -28,6 +30,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      {/* <Tabs.Screen
+        name="post"
+        options={{
+          title: "Post",
+          tabBarIcon: ({ color, focused }) => (
+            <Octicons name="diff-added" size={24} color={color} />
+          ),
+        }}
+      /> */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -41,19 +52,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="post"
-        options={{
-          title: "Post",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "add-circle-sharp" : "add-circle-outline"}
-              color={color}
-              size={24}
-            />
-          ),
-        }}
-      />
+      {/* 
       <Tabs.Screen
         name="universe"
         options={{

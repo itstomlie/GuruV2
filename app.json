@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "GuruV2",
-    "slug": "GuruV2",
+    "name": "Guru",
+    "slug": "Guru",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.itstomlie.Guru"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.itstomlie.Guru"
     },
     "web": {
       "bundler": "metro",
@@ -29,6 +31,14 @@
     "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3ed6e080-70d9-4d56-81bb-6a251c8d2cc8"
+      }
     }
   }
 }

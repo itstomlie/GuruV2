@@ -30,7 +30,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="post"
         options={{
           title: "Post",
@@ -38,7 +38,7 @@ export default function TabLayout() {
             <Octicons name="diff-added" size={24} color={color} />
           ),
         }}
-      /> */}
+      />
       <Tabs.Screen
         name="profile"
         options={{
